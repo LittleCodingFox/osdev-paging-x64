@@ -2,6 +2,7 @@
 #define _PAGING_H_
 #include <stdint.h>
 #include <stdbool.h>
+#include <stddef.h>
 
 #ifdef __cplusplus
 #define PAGING_EXPORT extern "C"

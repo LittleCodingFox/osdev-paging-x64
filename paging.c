@@ -1,5 +1,5 @@
 #include "paging.h"
-#include <stddef.h>
+#include <string.h>
 
 struct PageTableOffset VirtualAddressToOffsets(void *virtualAddress)
 {
@@ -75,7 +75,7 @@ static inline struct PageTable *GetOrNullifyEntry(struct PageTable *table, uint6
     return (struct PageTable *)TranslateToHighHalfMemoryAddress(address & PAGE_ADDRESS_MASK);
 }
 
-static inline uint64_t DuplicateRecursive(struct PageTableManager *self, uint64_t entry, uint64_t level)
+static inline uint64_t DuplicateRecursive(struct PageTable *self, uint64_t entry, uint64_t level)
 {
     const uint64_t flags = PAGING_FLAG_PRESENT | PAGING_FLAG_USER_ACCESSIBLE | PAGING_FLAG_WRITABLE;
 
