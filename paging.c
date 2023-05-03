@@ -205,3 +205,33 @@ void PagingDuplicate(struct PageTable *p4, struct PageTable *newTable)
         newTable->entries[i] = p4Virtual->entries[i];
     }
 }
+
+uint64_t TranslateToHighHalfMemoryAddress(uint64_t physicalAddress)
+{
+    return physicalAddress + HIGHER_HALF_MEMORY_OFFSET;
+}
+
+uint64_t TranslateToPhysicalMemoryAddress(uint64_t virtualAddress)
+{
+    return virtualAddress - HIGHER_HALF_MEMORY_OFFSET;
+}
+
+uint64_t TranslateToKernelPhysicalMemoryAddress(uint64_t virtualAddress)
+{
+    return virtualAddress - HIGHER_HALF_KERNEL_MEMORY_OFFSET;
+}
+
+uint64_t TranslateToKernelMemoryAddress(uint64_t virtualAddress)
+{
+    return virtualAddress + HIGHER_HALF_KERNEL_MEMORY_OFFSET;
+}
+
+bool IsHigherHalf(uint64_t physicalAddress)
+{
+    return physicalAddress >= HIGHER_HALF_MEMORY_OFFSET;
+}
+
+bool IsKernelHigherHalf(uint64_t physicalAddress)
+{
+    return physicalAddress >= HIGHER_HALF_KERNEL_MEMORY_OFFSET;
+}

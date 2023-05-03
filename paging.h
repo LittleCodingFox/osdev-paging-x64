@@ -5,9 +5,7 @@
 #include <stddef.h>
 
 #ifdef __cplusplus
-#define PAGING_EXPORT extern "C"
-#else
-#define PAGING_EXPORT
+extern "C" {
 #endif
 
 #define HIGHER_HALF_MEMORY_OFFSET           0xFFFF800000000000
@@ -16,35 +14,17 @@
 #define PAGE_FLAG_MASK                      (0xFFF | (1ull << 63))
 #define PAGE_ADDRESS_MASK                   (~(PAGE_FLAG_MASK))
 
-inline uint64_t TranslateToHighHalfMemoryAddress(uint64_t physicalAddress)
-{
-    return physicalAddress + HIGHER_HALF_MEMORY_OFFSET;
-}
+uint64_t TranslateToHighHalfMemoryAddress(uint64_t physicalAddress);
 
-inline uint64_t TranslateToPhysicalMemoryAddress(uint64_t virtualAddress)
-{
-    return virtualAddress - HIGHER_HALF_MEMORY_OFFSET;
-}
+uint64_t TranslateToPhysicalMemoryAddress(uint64_t virtualAddress);
 
-inline uint64_t TranslateToKernelPhysicalMemoryAddress(uint64_t virtualAddress)
-{
-    return virtualAddress - HIGHER_HALF_KERNEL_MEMORY_OFFSET;
-}
+uint64_t TranslateToKernelPhysicalMemoryAddress(uint64_t virtualAddress);
 
-inline uint64_t TranslateToKernelMemoryAddress(uint64_t virtualAddress)
-{
-    return virtualAddress + HIGHER_HALF_KERNEL_MEMORY_OFFSET;
-}
+uint64_t TranslateToKernelMemoryAddress(uint64_t virtualAddress);
 
-inline bool IsHigherHalf(uint64_t physicalAddress)
-{
-    return physicalAddress >= HIGHER_HALF_MEMORY_OFFSET;
-}
+bool IsHigherHalf(uint64_t physicalAddress);
 
-inline bool IsKernelHigherHalf(uint64_t physicalAddress)
-{
-    return physicalAddress >= HIGHER_HALF_KERNEL_MEMORY_OFFSET;
-}
+bool IsKernelHigherHalf(uint64_t physicalAddress);
 
 enum PagingFlag
 {
@@ -72,12 +52,17 @@ struct __attribute__((aligned(0x1000))) PageTable
     uint64_t entries[512];
 };
 
-PAGING_EXPORT void PagingMapMemory(struct PageTable *p4, void *virtualMemory, void *physicalMemory, uint64_t flags);
-PAGING_EXPORT void PagingUnmapMemory(struct PageTable *p4, void *virtualMemory);
-PAGING_EXPORT void PagingIdentityMap(struct PageTable *p4, void *virtualMemory, uint64_t flags);
-PAGING_EXPORT void *PagingPhysicalMemory(struct PageTable *p4, void *virtualMemory);
-PAGING_EXPORT void PagingDuplicate(struct PageTable *p4, struct PageTable *newTable);
-PAGING_EXPORT void PagingSetActivePageTable(struct PageTable *p4);
+void PagingMapMemory(struct PageTable *p4, void *virtualMemory, void *physicalMemory, uint64_t flags);
+void PagingUnmapMemory(struct PageTable *p4, void *virtualMemory);
+void PagingIdentityMap(struct PageTable *p4, void *virtualMemory, uint64_t flags);
+void *PagingPhysicalMemory(struct PageTable *p4, void *virtualMemory);
+void PagingDuplicate(struct PageTable *p4, struct PageTable *newTable);
+void PagingSetActivePageTable(struct PageTable *p4);
 
-PAGING_EXPORT uint64_t PagingGetFreeFrame();
+uint64_t PagingGetFreeFrame();
+
+#ifdef __cplusplus
+}
+#endif
+
 #endif
